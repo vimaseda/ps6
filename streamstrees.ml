@@ -117,13 +117,13 @@ node t -- Returns the element of type 'a stored at the root node of
 tree t of type 'a tree.
 ......................................................................*)
 let node (t : 'a tree) : 'a =
-  let Node(e, _) = Lazy.force t in e ;;
+  let Node (e, _) = Lazy.force t in e ;;
 
 (*......................................................................
 children t -- Returns the list of children of the root node of tree t.
 ......................................................................*)
 let children (t : 'a tree) : 'a tree list =
-  let Node(_, tr) = Lazy.force t in tr ;;
+  let Node (_, tr) = Lazy.force t in tr ;;
 
 (*......................................................................
 print_depth n indent t -- Prints a representation of the first n
@@ -134,7 +134,7 @@ let rec print_depth (n : int) (indent : int) (t : int tree) : unit =
   let rec spaces i =
     match i with
     | 0 -> ()
-    | i' -> Printf.printf(" "); spaces (i'-1) in 
+    | i' -> Printf.printf(" "); spaces (i' - 1) in 
   spaces indent; Printf.printf("%d...\n") (node t);
   match n with
   | 0 -> ()
@@ -149,7 +149,7 @@ tmap f t -- Returns a tree obtained by mapping the function f over
 each node in t.
 ......................................................................*)
 let rec tmap (f : 'a -> 'b) (t : 'a tree) : 'b tree =
-  let Node(e, tr) = Lazy.force t in lazy (Node(f e, List.map (tmap f)  tr)) ;;
+  let Node (e, tr) = Lazy.force t in lazy (Node (f e, List.map (tmap f)  tr)) ;;
 
 (*......................................................................
 tmap2 f t1 t2 -- Returns the tree obtained by applying the function f
@@ -159,8 +159,8 @@ to corresponding nodes in t1 and t2, which must have the same
 let rec tmap2 (f : 'a -> 'b -> 'c)
               (t1 : 'a tree) (t2 : 'b tree)
             : 'c tree =
-  let Node(e1, tr1), Node(e2, tr2) = Lazy.force t1, Lazy.force t2 in 
-  lazy (Node(f e1 e2, List.map2 (tmap2 f) tr1 tr2)) ;;
+  let Node (e1, tr1), Node (e2, tr2) = Lazy.force t1, Lazy.force t2 in 
+  lazy (Node (f e1 e2, List.map2 (tmap2 f) tr1 tr2)) ;;
 
 (*......................................................................
 bfenumerate tslist -- Returns a LazyStreams.stream of the nodes in the
@@ -171,7 +171,7 @@ forth. There is an example of bfenumerate being applied below.
  *)
 let rec bfenumerate (tslist : 'a tree list) : 'a stream =
   match tslist with
-  | h :: t -> lazy(Cons(node h, bfenumerate (t @ children h)))
+  | h :: t -> lazy (Cons (node h, bfenumerate (t @ children h)))
   | [] -> raise Finite_tree ;;
 
 (* Now use your implementation to generate some interesting infinite
@@ -200,7 +200,7 @@ argument n. For example:
 - : unit = ()
 ......................................................................*)
 let rec levels (n : int) : int tree =
-  lazy(Node(n, [levels (n+1); levels (n+1)])) ;;
+  lazy(Node (n, [levels (n + 1); levels (n + 1)])) ;;
 
 (*......................................................................
 Define an infinite binary tree tree_nats where the value of each node in
@@ -221,7 +221,7 @@ with 0. For example:
 ......................................................................*)
 let tree_nats : int tree =
   let rec nats (n : int) : int tree = 
-    lazy (Node(n, [nats (2*n +1); nats (2*n +2)])) in nats 0 ;;
+    lazy (Node (n, [nats (2 * n + 1); nats (2 * n + 2)])) in nats 0 ;;
                                                  
 (*======================================================================
 Time estimate
