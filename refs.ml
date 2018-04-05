@@ -14,23 +14,48 @@ list has a cycle. You may want a recursive helper function. Don't
 worry about space usage.
 ......................................................................*)
                                       
-let has_cycle (lst : 'a mlist) : bool =
-  failwith "has_cycle not implemented"
+let has_cycle lst =
+	let rec helper (l : 'a mlist ref list) (r : 'a mlist ref) : bool = 
+		match List.exists (fun x -> x == r) l with
+		| true -> true
+		| false -> match !r with
+				   | Cons(_, t') -> helper (r :: l) t'
+				   | Nil -> false in
+	match lst with
+	| Nil -> false
+	| Cons (_, t) -> helper [] t ;;
 
 (*......................................................................
 Problem 2: Write a function flatten that flattens a list (removes its
 cycles if it has any) destructively. Again, you may want a recursive
 helper function and you shouldn't worry about space.
 ......................................................................*)
-let flatten (lst : 'a mlist) : unit =
-  failwith "flatten not implemented"
+let flatten lst =
+	let rec helper (l : 'a mlist ref list) (r : 'a mlist ref) : unit = 
+		match List.exists (fun x -> r == x) l with
+		| true -> let h = List.hd l in h := Nil; ()
+		| false -> match !r with
+				   | Cons(_, t') -> helper (r :: l) t'
+				   | Nil -> () in
+	match lst with
+	| Nil -> ()
+	| Cons (_, t) -> helper [] t ;;
+
 
 (*......................................................................
 Problem 3: Write mlength, which nondestructively finds the number of
 nodes in a mutable list that may have cycles.
 ......................................................................*)
-let mlength (lst : 'a mlist) : int =
-  failwith "mlength not implemented"
+let mlength lst =
+	let rec helper (l : 'a mlist ref list) (r : 'a mlist ref) : int = 
+		match List.exists (fun x -> x == r) l with
+		| true -> List.length l
+		| false -> match !r with
+				   | Cons(_, t') -> helper (r :: l) t'
+				   | Nil -> (List.length l) + 1 in
+	match lst with
+	| Nil -> 0
+	| Cons (_, t) -> helper [] t ;;
                          
 (*======================================================================
 Time estimate
@@ -41,4 +66,4 @@ on average, not in total).  We care about your responses and will use
 them to help guide us in creating future assignments.
 ......................................................................*)
 
-let minutes_spent_on_part () : int = failwith "not provided" ;;
+let minutes_spent_on_part () : int = 200 ;;
