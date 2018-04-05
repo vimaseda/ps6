@@ -182,10 +182,13 @@ let rec list_to_stream (lst : obj list) : event NLS.stream =
   let rec list_to_stream_rec (nlst : obj list) : event NLS.stream =
     match nlst with
     | Note (p, f, i) :: tl -> 
-      lazy (Cons (Tone(0., p, i), lazy (Cons (Stop(f, p), list_to_stream_rec tl))))
+        lazy (Cons (Tone(0., p, i), lazy (Cons (Stop(f, p), 
+                                              list_to_stream_rec tl))))
     | Rest (fl) :: Note (p, f, i) :: tl -> 
-      lazy (Cons (Tone (fl, p, i), lazy (Cons (Stop (f, p), list_to_stream_rec tl))))
-    | Rest (f1) :: Rest (f2) :: tl -> list_to_stream_rec (Rest (f1 +. f2) :: tl)
+        lazy (Cons (Tone (fl, p, i), lazy (Cons (Stop (f, p), 
+                                                list_to_stream_rec tl))))
+    | Rest (f1) :: Rest (f2) :: tl -> 
+        list_to_stream_rec (Rest (f1 +. f2) :: tl)
     | Rest (f) :: [] -> list_to_stream (Rest (f) :: lst)
     | [] -> list_to_stream lst
   in list_to_stream_rec lst ;;
@@ -335,7 +338,8 @@ let fast = [(D, 3); (Gb, 3); (A, 3); (G, 3);
 let melody = list_to_stream ((List.map quarter slow)
                              @ (List.map eighth fast));;
 
-let canon = pair (pair bass (shift_start 2. melody)) (pair (shift_start 4. melody) (shift_start 6. melody)) ;;
+let canon = pair (pair bass (shift_start 2. melody)) 
+                 (pair (shift_start 4. melody) (shift_start 6. melody)) ;;
 
 let _ = output_midi "canon.mid" (stream_to_hex 176 canon);;
 
